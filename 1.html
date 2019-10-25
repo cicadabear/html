@@ -1,0 +1,65 @@
+<html>
+<script>
+    // navigator.geolocation.getCurrentPosition(function (position) {
+    //     console.log('Geolocation permissions granted');
+    //     console.log('Latitude:' + position.coords.latitude);
+    //     console.log('Longitude:' + position.coords.longitude);
+    // });
+    function handlePermission() {
+        navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+            if (result.state == 'granted') {
+                report(result.state);
+                // geoBtn.style.display = 'none';
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    console.log('Geolocation permissions granted');
+                    console.log('Latitude:' + position.coords.latitude);
+                    console.log('Longitude:' + position.coords.longitude);
+                });
+            } else if (result.state == 'prompt') {
+                report(result.state);
+                // geoBtn.style.display = 'none';
+                // navigator.geolocation.getCurrentPosition(revealPosition, positionDenied, geoSettings);
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    console.log('Geolocation permissions granted');
+                    console.log('Latitude:' + position.coords.latitude);
+                    console.log('Longitude:' + position.coords.longitude);
+                });
+            } else if (result.state == 'denied') {
+                report(result.state);
+                // geoBtn.style.display = 'inline';
+            }
+            result.onchange = function () {
+                report(result.state);
+            }
+        });
+    }
+
+    function report(state) {
+        console.log('Permission ' + state);
+    }
+
+    handlePermission();
+
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
+
+    function success(pos) {
+        var crd = pos.coords;
+
+        console.log('Your current position is:');
+        console.log(`Latitude : ${crd.latitude}`);
+        console.log(`Longitude: ${crd.longitude}`);
+        console.log(`More or less ${crd.accuracy} meters.`);
+    }
+
+    function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
+
+    navigator.geolocation.getCurrentPosition(success, error, options);
+</script>
+
+</html>
